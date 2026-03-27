@@ -92,6 +92,18 @@ height: 100%;
   background: #444;
 }
 
+/* Clear button */
+.clear {
+  margin-top: 30px;
+  background: #9ca3af;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.clear:hover {
+  background: #6b7280;
+}
+
 /* Input */
 .amount-input {
   width: 100%;
