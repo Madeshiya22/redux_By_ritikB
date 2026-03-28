@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/notes";
+const API_URL = "https://notes-backend-gc7q.onrender.com/api/notes";
 
 export const fetchNotes = async (note) => {
     const response = await axios.get(`${API_URL}`,note);
