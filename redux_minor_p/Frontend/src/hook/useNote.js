@@ -1,4 +1,4 @@
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from 'react-redux';
 import {fetchNotesApi, createNoteApi, updateNoteApi, deleteNoteApi} from "../redux/slice/noteSlice";
 
 export const useNote = () => {

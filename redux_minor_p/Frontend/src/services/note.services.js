@@ -2,13 +2,12 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/notes";
 
-export const fetchNotes = async () => {
-    const response = await axios.get(`${API_URL}`);
+export const fetchNotes = async (note) => {
+    const response = await axios.get(`${API_URL}`,note);
     return response.data;
 };
 
 export const createNote = async (noteData) => {
-    // Handling trailing slash or nested /notes route if needed. Assuming /api/notes
     const response = await axios.post(`${API_URL}`, noteData);
     return response.data;
 };

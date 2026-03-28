@@ -27,6 +27,9 @@ const App = () => {
       await createNote({ title, description });
     }
 
+    // Refresh notes from backend turant ho sake
+    await fetchNotes();
+
     // Reset Form
     setTitle("");
     setDescription("");
@@ -36,6 +39,8 @@ const App = () => {
 
   const handleDelete = (id) => {
     deleteNote(id);
+    // Turant refresh
+    fetchNotes();
   };
 
   const handleEdit = (id) => {
