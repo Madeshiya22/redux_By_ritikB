@@ -21,7 +21,7 @@ const createNote = async (req, res) => {
 
 const getAllNotes = async (req, res) => {
   try {
-    const notes = (await noteModel.find()).sort({ createdAt: -1 }); // ye .sort ye find kr raha hai database se pahale aur latest notes
+    const notes = await noteModel.find().sort({ createdAt: -1 }); // ye .sort ye find kr raha hai database se pahale aur latest notes
     res.status(200).json(notes);
   } catch (error) {
     res.status(400).json({ message: error.message });
