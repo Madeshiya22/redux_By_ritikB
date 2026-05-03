@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
-    "axios": "^1.14.0", 
+    "@tanstack/react-query": "^5.85.5",
+    "axios": "^1.14.0",
     "install": "^0.13.0",
     "lucide-react": "^1.7.0",
     "npm": "^11.12.1",
@@ -28,6 +29,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "sass": "^1.99.0",
     "vite": "^8.0.1"
   }
 }

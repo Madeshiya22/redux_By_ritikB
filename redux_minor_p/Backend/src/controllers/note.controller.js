@@ -8,7 +8,7 @@ const createNote = async (req, res) => {
         .status(400)
         .json({ message: "Title and Description are required" });
     }
-    const note = new noteModel({ title, description });
+    const note = new noteModel({ title, description, user_id: req.userId });
     await note.save();
     res.status(201).json({
       message: "Note created successfully",
@@ -21,7 +21,8 @@ const createNote = async (req, res) => {
 
 const getAllNotes = async (req, res) => {
   try {
-    const notes = await noteModel.find().sort({ createdAt: -1 }); // ye .sort ye find kr raha hai database se pahale aur latest notes
+    // Only fetch notes for the authenticated user
+    const notes = await noteModel.find({ user_id: req.userId }).sort({ createdAt: -1 });
     res.status(200).json(notes);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -35,15 +36,20 @@ const updateNote = async (req, res) => {
     if (!title || !description) {
       return res.status(400).json({ message: "Title and Description are required" });
     }
-    const note = await noteModel.findByIdAndUpdate(
+    // Check if note exists and belongs to the user
+    const note = await noteModel.findById(id);
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+    if (note.user_id.toString() !== req.userId) {
+      return res.status(403).json({ message: "Unauthorized: You can only update your own notes" });
+    }
+    const updatedNote = await noteModel.findByIdAndUpdate(
       id,
       { title, description },
       { new: true },
     );
-    if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-    res.status(200).json(note); 
+    res.status(200).json(updatedNote); 
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -53,13 +59,17 @@ const updateNote = async (req, res) => {
 const deleteNote = async (req, res) => {
   try {
     const { id } = req.params;
-    const note = await noteModel.findByIdAndDelete(id);
+    // Check if note exists and belongs to the user
+    const note = await noteModel.findById(id);
     if (!note) {
       return res.status(404).json({ message: "Note not found" });
     }
+    if (note.user_id.toString() !== req.userId) {
+      return res.status(403).json({ message: "Unauthorized: You can only delete your own notes" });
+    }
+    await noteModel.findByIdAndDelete(id);
     res.status(200).json({ message: "Note deleted successfully" });
-  }
-    catch (error) {
+  } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };

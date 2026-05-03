@@ -1,23 +1,55 @@
 import axios from "axios";
 
-const API_URL = "https://notes-backend-gc7q.onrender.com/api/notes";
+const NOTES_API_URL = import.meta.env.VITE_NOTES_API_URL || "http://localhost:3001/api/notes";
 
-export const fetchNotes = async (note) => {
-    const response = await axios.get(`${API_URL}`,note);
-    return response.data;
+const noteClient = axios.create({
+  baseURL: NOTES_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+noteClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+// Response interceptor to handle 401 (token expired)
+noteClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // If 401 Unauthorized (token expired), clear localStorage and reload
+    if (error.response?.status === 401) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      // Reload page to show login
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const fetchNotes = async () => {
+  const response = await noteClient.get("");
+  return response.data;
 };
 
 export const createNote = async (noteData) => {
-    const response = await axios.post(`${API_URL}`, noteData);
-    return response.data;
+  const response = await noteClient.post("", noteData);
+  return response.data;
 };
 
 export const updateNote = async (id, noteData) => {
-    const response = await axios.put(`${API_URL}/${id}`, noteData);
-    return response.data;
+  const response = await noteClient.put(`/${id}`, noteData);
+  return response.data;
 };
 
 export const deleteNote = async (id) => {
-    const response = await axios.delete(`${API_URL}/${id}`);
-    return response.data;
+  const response = await noteClient.delete(`/${id}`);
+  return response.data;
 };
