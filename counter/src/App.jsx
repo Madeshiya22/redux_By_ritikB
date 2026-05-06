@@ -15,7 +15,8 @@ function App() {
         <h1 className="title">Redux Counter</h1>
         
         <div className="count-display">
-          {count}
+          {count} 
+
         </div>
 
         <div className="button-group">
